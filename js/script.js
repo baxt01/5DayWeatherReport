@@ -27,7 +27,7 @@ $('#search-button').on('click', function (e) {
     e.preventDefault();
 
     // Here we are building the URL we need to query the database
-    var geoQueryURL = "http://api.openweathermap.org/geo/1.0/direct?";
+    var geoQueryURL = "https://api.openweathermap.org/geo/1.0/direct?";
     
     // get the user's inputted location.
     var location = $('#search-input').val();
