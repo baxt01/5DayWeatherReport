@@ -2,24 +2,23 @@ var API = "0faefdf2ca0e5811213ef3ffb85306f1";
 var iconurl = 'https://openweathermap.org/img/w/';
 
 // Recover the local storage.
-var recovery = [localStorage.getItem('city')];
-if (!recovery == null){
-recovery = JSON.parse(recovery);
-console.log(recovery);
-}
-
-if (recovery > 0) {
-
-for (var i = 0; i <= recovery.length; i++) {
-    var place = recovery[i];
+var recover = [];
+var recovery = localStorage.getItem('city');
+parsedRecovery = JSON.parse(recovery);
+if (!parsedRecovery) {
+    console.log('empty');
+} else {
+    //loop to get the history button on the page.
+for (var i = 0; i < parsedRecovery.length - 1; i++) {
+    var place = parsedRecovery[i];
     var historicalSearch = $('<button>');
-    historicalSearch.addClass('btn, btn-secondary, mb-2');
-    historicalSearch.attr('data-name', place);
+    historicalSearch.addClass('btn btn-secondary mb-2');
+    historicalSearch.attr('id', place);
     historicalSearch.text(place);
     $('#history').append(historicalSearch);
 }
-
 }
+
 
 // set the onclick function.
 $('#search-button').on('click', function (e) {
@@ -32,6 +31,7 @@ $('#search-button').on('click', function (e) {
     // get the user's inputted location.
     var location = $('#search-input').val();
 
+    // Building the geo location URL.
     var geoQueryurlq = geoQueryURL + 'q=' + location + '&limit=5&appid=' + API;
     var date = dayjs().format('DD-MM-YYYY');
     
@@ -61,22 +61,30 @@ $('#search-button').on('click', function (e) {
             return res.json();
         })
         .then(function(data){
-            // putting the current weather icon on the page.
-            
+            // putting the current weather & icon on the page.
             var iconCode = data.list[0].weather[0].icon;
             var icon = `${iconurl}${iconCode}`;
-            console.log(data);  
             var city = data.city.name;
             var temp = data.list[0].main.temp;
             var wind = data.list[0].wind.speed;
             var humidity = data.list[0].main.humidity;
             
                     // push current city to the array in local storage.
-                    recovery.push(city);
-                   
+                   recover.push(city);
+                   var rec = recover.concat(parsedRecovery);
+                   // Removing Duplicate entries so on refresh or re-visit there is only one of each location name. 
+                   function removeDuplicates (rec) {
+                    let unique = rec.reduce(function (acc, curr) {
+                        if (!acc.includes(curr))
+                        acc.push(curr);
+                    return acc;
+                    }, newRec = []);
+                   }
+                   removeDuplicates(rec);
+
                     //use JSON stringify to convert the array.
-                    var saving = JSON.stringify(recovery);
-                    console.log(saving);
+                    var saving = JSON.stringify(newRec);
+
                     // store the city name in local storage to recreate the history buttons.
                         localStorage.setItem('city', saving);
 
@@ -85,15 +93,15 @@ $('#search-button').on('click', function (e) {
             <p>Temp: ${temp}°c <br>
              Wind: ${wind}MPH <br>
              Humidity: ${humidity}% </p>`);
-            //creating the buttons for history.
-
+          
+             //creating the buttons for history.
             var historicalSearch = $('<button>');
             historicalSearch.addClass('btn btn-secondary mb-2');
             historicalSearch.attr('data-name', city);
             historicalSearch.text(city);
             $('#history').append(historicalSearch);
 
-
+            // Building the forward forecast.
         })
         
     })
