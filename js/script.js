@@ -1,10 +1,30 @@
 var API = "0faefdf2ca0e5811213ef3ffb85306f1";
 var iconurl = 'https://openweathermap.org/img/w/';
 
+// Recover the local storage.
+var recovery = [localStorage.getItem('city')];
+if (!recovery == null){
+recovery = JSON.parse(recovery);
+console.log(recovery);
+}
+
+if (recovery > 0) {
+
+for (var i = 0; i <= recovery.length; i++) {
+    var place = recovery[i];
+    var historicalSearch = $('<button>');
+    historicalSearch.addClass('btn, btn-secondary, mb-2');
+    historicalSearch.attr('data-name', place);
+    historicalSearch.text(place);
+    $('#history').append(historicalSearch);
+}
+
+}
+
 // set the onclick function.
 $('#search-button').on('click', function (e) {
     // prevent the default browser behavior.
-    event.preventDefault();
+    e.preventDefault();
 
     // Here we are building the URL we need to query the database
     var geoQueryURL = "http://api.openweathermap.org/geo/1.0/direct?";
@@ -14,7 +34,7 @@ $('#search-button').on('click', function (e) {
 
     var geoQueryurlq = geoQueryURL + 'q=' + location + '&limit=5&appid=' + API;
     var date = dayjs().format('DD-MM-YYYY');
-
+    
     // Here we run our Fetch call to the OpenWeatherMap geolocation API
     fetch(geoQueryurlq)
     .then(function (response) {
@@ -42,7 +62,7 @@ $('#search-button').on('click', function (e) {
         })
         .then(function(data){
             // putting the current weather icon on the page.
-            ''
+            
             var iconCode = data.list[0].weather[0].icon;
             var icon = `${iconurl}${iconCode}`;
             console.log(data);  
@@ -51,21 +71,34 @@ $('#search-button').on('click', function (e) {
             var wind = data.list[0].wind.speed;
             var humidity = data.list[0].main.humidity;
             
+                    // push current city to the array in local storage.
+                    recovery.push(city);
+                   
+                    //use JSON stringify to convert the array.
+                    var saving = JSON.stringify(recovery);
+                    console.log(saving);
+                    // store the city name in local storage to recreate the history buttons.
+                        localStorage.setItem('city', saving);
+
             // adding the wether for Today onto the page.
             $('#today').html(`<h1>${city} ${date}<img src=${icon}.png></h1> <br> 
             <p>Temp: ${temp}°c <br>
              Wind: ${wind}MPH <br>
              Humidity: ${humidity}% </p>`);
+            //creating the buttons for history.
 
-             //creating the buttons for history.
-             
-        
+            var historicalSearch = $('<button>');
+            historicalSearch.addClass('btn btn-secondary mb-2');
+            historicalSearch.attr('data-name', city);
+            historicalSearch.text(city);
+            $('#history').append(historicalSearch);
+
+
         })
-
+        
     })
-
+    
 })
 
-
-
+                
 
