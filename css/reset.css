@@ -14,3 +14,7 @@
 .weather-hr {
     width: auto !important;
 }
+
+#search-button {
+    width: 100%;
+}
