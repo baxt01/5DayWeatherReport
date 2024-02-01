@@ -47,6 +47,6 @@ This webpage has been tested using Git Pages [Click here to visit my live  git p
 
 ## Screenshots
 
- ![My Repo](https://github.com/baxt01/javascriptpoweredquiz/blob/main/assets/images/repo.png) 
-  ![working code](https://github.com/baxt01/javascriptpoweredquiz/blob/main/assets/images/live%20code.png)
-   ![Live Repo](https://github.com/baxt01/javascriptpoweredquiz/blob/main/assets/images/repo.png)
+ ![My Repo](https://github.com/baxt01/5DayWeatherReport/blob/main/images/repo.png) 
+  ![working code](https://github.com/baxt01/5DayWeatherReport/blob/main/images/livecode.png)
+   ![Live page](https://github.com/baxt01/5DayWeatherReport/blob/main/images/live%20page.png)
